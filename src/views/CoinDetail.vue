@@ -1,6 +1,13 @@
 <template>
   <div class="flex-col">
-    <template v-if="asset.id">
+    <div class="flex justify-center">
+      <pacman-loader
+        v-bind:loading="isLoading"
+        v-bind:color="'#68d391'"
+        v-bind:size="25"
+      ></pacman-loader>
+    </div>
+    <template v-if="!isLoading">
       <div class="flex flex-col sm:flex-row justify-around items-center">
         <div class="flex flex-col items-center">
           <img
@@ -63,6 +70,16 @@
           <span class="text-xl"></span>
         </div>
       </div>
+
+      <line-chart
+        class="my-10"
+        v-bind:colors="['orange']"
+        v-bind:min="min"
+        v-bind:max="max"
+        v-bind:data="
+          history.map((h) => [h.date, parseFloat(h.priceUsd).toFixed(2)])
+        "
+      ></line-chart>
     </template>
   </div>
 </template>
@@ -75,6 +92,7 @@ export default {
 
   data() {
     return {
+      isLoading: false,
       asset: {},
       history: [],
     };
@@ -108,13 +126,14 @@ export default {
   methods: {
     getCoin() {
       const id = this.$route.params.id;
+      this.isLoading = true;
 
-      Promise.all([api.getAsset(id), api.getAssetHistory(id)]).then(
-        ([asset, history]) => {
+      Promise.all([api.getAsset(id), api.getAssetHistory(id)])
+        .then(([asset, history]) => {
           this.asset = asset;
           this.history = history;
-        }
-      );
+        })
+        .finally(() => (this.isLoading = false));
     },
   },
 };

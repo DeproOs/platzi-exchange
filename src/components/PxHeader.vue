@@ -4,8 +4,10 @@
       <nav class="flex items-center justify-between flex-wrap bg-green-400 p-6">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
           <PxIcon class="mr-2"></PxIcon>
-          <span class="font-semibold text-xl tracking-tight"
-            >PlatziExchange</span
+          <router-link
+            v-bind:to="{ name: 'home' }"
+            class="font-semibold text-xl tracking-tight"
+            >PlatziExchange</router-link
           >
         </div>
         <div

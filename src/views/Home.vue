@@ -1,6 +1,11 @@
 <template>
   <div>
-    <px-assets-table v-bind:assets="assets"></px-assets-table>
+    <pacman-loader
+      v-bind:loading="isLoading"
+      v-bind:color="'#68d391'"
+      v-bind:size="25"
+    ></pacman-loader>
+    <px-assets-table v-if="!isLoading" v-bind:assets="assets"></px-assets-table>
   </div>
 </template>
 
@@ -14,12 +19,18 @@ export default {
 
   data() {
     return {
+      isLoading: false,
       assets: [],
     };
   },
 
   created() {
-    api.getAssets().then((assets) => (this.assets = assets));
+    this.isLoading = true;
+
+    api
+      .getAssets()
+      .then((assets) => (this.assets = assets))
+      .finally(() => (this.isLoading = false));
   },
 };
 </script>
